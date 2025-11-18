@@ -1,0 +1,28 @@
+{
+  "name": "whatsapp-email-pipeline",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Form submission handler with WhatsApp and Email",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test-wa": "node test-whatsapp.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mime-types": "^2.1.35",
+    "nodemailer": "^6.9.4",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.23.0"
+  },
+  "keywords": [
+    "whatsapp",
+    "email",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

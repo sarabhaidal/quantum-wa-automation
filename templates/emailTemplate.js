@@ -25,8 +25,10 @@ Highlights:
 
 📄 Your "Quantum Map" PDF is attached to this email.
 
+Help us spread the word! Share the registration link with your friends:
+🔗 https://tinyurl.com/quantum-cats
+
 📞 Questions? Contact Om Chavan: +91 8390770254
-🔗 Share & register: tinyurl.com/quantum-cats
 
 Open for all • Free entry
 Please share widely in your groups!
@@ -37,6 +39,9 @@ See you there!
 
 export function emailHtmlTemplate(data) {
     const name = data.name || 'there';
+    const shareUrl = 'https://tinyurl.com/quantum-cats';
+    const shareText = encodeURIComponent('Join me at "The Cat\'s Out, The Circuits Are Quantum!" - A Nobel Prize 2025 Physics talk on Nov 22 at Jnana Prabodhini, Pune. Register free: ' + shareUrl);
+
     return `
 <!DOCTYPE html>
 <html>
@@ -58,6 +63,14 @@ export function emailHtmlTemplate(data) {
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 180px;
+            height: auto;
         }
         .header {
             text-align: center;
@@ -121,19 +134,109 @@ export function emailHtmlTemplate(data) {
             margin: 20px 0;
             border-radius: 4px;
         }
-        .cta-button {
-            display: inline-block;
-            background-color: #4285f4;
-            color: #ffffff !important;
-            padding: 12px 30px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            margin: 10px 5px;
+        .share-section {
+            background-color: #f0f7ff;
+            border: 2px dashed #4285f4;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
             text-align: center;
         }
-        .cta-button:hover {
+        .share-title {
+            color: #1a73e8;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .share-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            color: #ffffff !important;
+            transition: transform 0.2s;
+            min-width: 120px;
+        }
+        .share-button:hover {
+            transform: translateY(-2px);
+        }
+        .share-button.whatsapp {
+            background-color: #25D366;
+        }
+        .share-button.whatsapp:hover {
+            background-color: #1da851;
+        }
+        .share-button.facebook {
+            background-color: #1877F2;
+        }
+        .share-button.facebook:hover {
+            background-color: #0d65d9;
+        }
+        .share-button.twitter {
+            background-color: #1DA1F2;
+        }
+        .share-button.twitter:hover {
+            background-color: #0d8bd9;
+        }
+        .share-button.linkedin {
+            background-color: #0A66C2;
+        }
+        .share-button.linkedin:hover {
+            background-color: #004182;
+        }
+        .share-button.email {
+            background-color: #EA4335;
+        }
+        .share-button.email:hover {
+            background-color: #d33426;
+        }
+        .copy-link-box {
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .copy-link-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            color: #5f6368;
+            outline: none;
+        }
+        .copy-button {
+            background-color: #4285f4;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .copy-button:hover {
             background-color: #1a73e8;
+        }
+        .contact {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
         }
         .footer {
             text-align: center;
@@ -142,12 +245,6 @@ export function emailHtmlTemplate(data) {
             border-top: 1px solid #e0e0e0;
             color: #5f6368;
             font-size: 14px;
-        }
-        .contact {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
         }
         @media only screen and (max-width: 600px) {
             body {
@@ -159,11 +256,22 @@ export function emailHtmlTemplate(data) {
             .title {
                 font-size: 20px;
             }
+            .share-buttons {
+                flex-direction: column;
+            }
+            .share-button {
+                width: 100%;
+                min-width: auto;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="logo-container">
+            <img src="cid:logo" alt="Jnana Prabodhini - Yuvak Vibhag" />
+        </div>
+
         <div class="header">
             <p style="margin: 0; color: #5f6368;">Hi <strong>${name}</strong>! 👋</p>
             <p style="margin: 10px 0 0 0; color: #5f6368;">Thank you for registering!</p>
@@ -210,8 +318,39 @@ export function emailHtmlTemplate(data) {
             </p>
         </div>
 
-        <div style="text-align: center; margin: 30px 0;">
-            <a href="https://tinyurl.com/quantum-cats" class="cta-button">📝 Register & Share</a>
+        <!-- SHARING SECTION -->
+        <!-- SHARING SECTION -->
+        <div class="share-section">
+            <div class="share-title">🌟 Help Us Spread the Word!</div>
+            <p style="margin: 10px 0; color: #5f6368;">Share this event with your friends, family, and colleagues</p>
+            
+            <div style="background-color: #ffffff; border: 2px solid #e0e0e0; border-radius: 6px; padding: 12px; margin: 15px 0; text-align: center;">
+                <p style="margin: 0 0 8px 0; font-size: 12px; color: #5f6368; font-weight: 600;">REGISTRATION LINK</p>
+                <code style="background-color: #f5f5f5; padding: 8px 12px; border-radius: 4px; font-size: 14px; color: #1a73e8; display: inline-block; word-break: break-all;">
+                    ${shareUrl}
+                </code>
+                <p style="margin: 8px 0 0 0; font-size: 12px; color: #5f6368;">
+                    📋 Select and copy the link above to share
+                </p>
+            </div>
+
+            <div class="share-buttons">
+                <a href="https://wa.me/?text=${shareText}" class="share-button whatsapp" target="_blank">
+                    📱 WhatsApp
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" class="share-button facebook" target="_blank">
+                    📘 Facebook
+                </a>
+                <a href="https://twitter.com/intent/tweet?text=${shareText}" class="share-button twitter" target="_blank">
+                    🐦 Twitter
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}" class="share-button linkedin" target="_blank">
+                    💼 LinkedIn
+                </a>
+                <a href="mailto:?subject=Nobel Prize 2025 Physics Talk&body=${shareText}" class="share-button email">
+                    ✉️ Email
+                </a>
+            </div>
         </div>
 
         <div class="contact">
@@ -233,6 +372,25 @@ export function emailHtmlTemplate(data) {
             <p style="margin: 8px 0 0 0;">— Jnana Prabodhini, Yuvak Vibhag</p>
         </div>
     </div>
+
+    <script>
+        function copyLink() {
+            const input = document.getElementById('shareLink');
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '✓ Copied!';
+            button.style.backgroundColor = '#34a853';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.backgroundColor = '#4285f4';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
     `.trim();

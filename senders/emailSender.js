@@ -3,6 +3,8 @@ import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
+import { emailTextTemplate, emailHtmlTemplate } from '../templates/emailTemplate.js';
+
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -15,22 +17,22 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export async function sendEmail({ toEmail, subject, textBody, htmlBody, pdfPath }) {
+export async function sendEmail({ toEmail, data, pdfPath }) {
     const attachments = [];
     if (pdfPath && fs.existsSync(pdfPath)) {
         attachments.push({
-            filename: path.basename(pdfPath),
+            filename: 'Quantum-Map.pdf',
             path: pdfPath,
             contentType: 'application/pdf'
         });
     }
 
     const mailOptions = {
-        from: process.env.FROM_EMAIL,
+        from: `"Jnana Prabodhini - Yuvak Vibhag" <${process.env.FROM_EMAIL}>`,
         to: toEmail,
-        subject,
-        text: textBody,
-        html: htmlBody,
+        subject: '🎓 Nobel Prize 2025 Talk — Your Quantum Map Inside!',
+        text: emailTextTemplate(data),
+        html: emailHtmlTemplate(data),
         attachments
     };
 

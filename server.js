@@ -4,11 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initWhatsAppClient } from './whatsapp-client.js';
 import { sendEmail } from './senders/emailSender.js';
-import { safeSendWhatsApp } from './senders/whatsappSender.js';
-import { whatsappTemplate } from './templates/message.js';
-import { normalizePhone } from './utils/normalizePhone.js';
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -22,26 +18,11 @@ const PDF_PATH = process.env.PDF_PATH || path.join(__dirname, 'assets', 'Quantum
 const API_KEY = process.env.API_KEY || 'quantumcats';
 const HOST = process.env.HOST || `http://localhost:${PORT}`;
 
-let whatsappReady = false;
-let whatsappError = null;
-
-// Initialize WhatsApp
-console.log('🚀 Starting server...\n');
-initWhatsAppClient(process.env.WHATSAPP_CLIENT_ID || 'jp-client-1')
-    .then(() => {
-        whatsappReady = true;
-    })
-    .catch(err => {
-        whatsappError = err.message;
-        console.error('⚠️  WhatsApp unavailable:', err.message);
-    });
-
 app.get('/health', (req, res) => {
     res.json({
         ok: true,
-        whatsapp: whatsappReady,
-        error: whatsappError,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        version: '2.0.0-email-only'
     });
 });
 
@@ -53,33 +34,29 @@ app.post('/api/form-submit', async (req, res) => {
         }
 
         const data = req.body || {};
-        console.log('\n📝 Form submission:', data.name, data.email, data.whatsapp);
+        console.log('\n📝 Form submission:', {
+            timestamp: new Date().toISOString(),
+            name: data.name,
+            email: data.email,
+            whatsapp: data.whatsapp
+        });
 
-        const results = { email: null, whatsapp: null };
+        const results = { email: null };
 
-        // Email
+        // Send Email
         if (data.email) {
             try {
                 const emailResult = await sendEmail({
                     toEmail: data.email,
-                    subject: 'Your Quantum Map — & details for the Nobel Prize Lecture (22 Nov)',
-                    textBody: `Hi ${data.name || ''},\n\nAttached is "The Quantum Map"...`,
-                    htmlBody: `<p>Hi ${data.name || ''},</p><p>Please find attached "The Quantum Map".</p>`,
+                    data: data,  // Pass full data object for template
                     pdfPath: PDF_PATH
                 });
-                console.log('✓ Email sent');
+                console.log('✓ Email sent to:', data.email);
                 results.email = { success: true, id: emailResult.messageId };
             } catch (err) {
                 console.error('✗ Email failed:', err.message);
                 results.email = { success: false, error: err.message };
             }
-        }
-
-        // WhatsApp
-        if (data.whatsapp) {
-            const normalizedPhone = normalizePhone(data.whatsapp);
-            const waText = whatsappTemplate({ name: data.name });
-            results.whatsapp = await safeSendWhatsApp(normalizedPhone, waText, PDF_PATH);
         }
 
         console.log('✅ Done\n');
@@ -96,6 +73,6 @@ app.listen(PORT, () => {
     console.log(`🌐 Server running on port ${PORT}`);
     console.log(`📡 Webhook: ${HOST}/api/form-submit`);
     console.log(`🔑 API Key: ${API_KEY}`);
-    console.log(`📄 PDF: ${PDF_PATH}`);
+    console.log(`📧 Email-only mode`);
     console.log('='.repeat(60) + '\n');
 });
